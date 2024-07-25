@@ -1,0 +1,356 @@
+import { BigNumber, BigNumberish } from 'ethers';
+import BigNumberJS from 'bignumber.js';
+import { Token, TokenOrAddress, TokenTypes, isToken, isTokenTypes } from './token';
+import invariant from 'tiny-invariant';
+import orderBy from 'lodash/orderBy';
+import { toBigUnit, toSmallUnit } from '../utils';
+
+export interface TokenAmountObject {
+  token: TokenTypes;
+  amount: string;
+}
+
+export type TokenAmountPair = [TokenTypes, string];
+
+export class TokenAmount {
+  readonly token: Token;
+  amount: string;
+
+  constructor(token: TokenTypes, amount?: string);
+  constructor(tokenAmount: TokenAmount | TokenAmountObject | TokenAmountPair);
+  constructor(arg0: any, arg1?: any) {
+    if (isTokenTypes(arg0)) {
+      this.token = Token.from(arg0);
+      this.amount = TokenAmount.precise(arg1 ?? '0', this.token.decimals);
+    } else if (isTokenAmount(arg0)) {
+      this.token = arg0.token;
+      this.amount = arg0.amount;
+    } else if (isTokenAmountObject(arg0)) {
+      this.token = Token.from(arg0.token);
+      this.amount = TokenAmount.precise(arg0.amount ?? '0', this.token.decimals);
+    } else {
+      this.token = isToken(arg0[0]) ? arg0[0] : Token.from(arg0[0]);
+      this.amount = TokenAmount.precise(arg0[1] ?? '0', this.token.decimals);
+    }
+  }
+
+  static from(tokenAmount: TokenAmountTypes) {
+    return isTokenAmount(tokenAmount) ? tokenAmount : new TokenAmount(tokenAmount);
+  }
+
+  static precise(amount: string, decimals: number) {
+    return BigNumberJS(amount).decimalPlaces(decimals, BigNumberJS.ROUND_DOWN).toFixed();
+  }
+
+  get amountWei() {
+    return toSmallUnit(this.amount, this.token.decimals);
+  }
+
+  precise(amount: string): string;
+  precise(tokenAmount: TokenAmount): string;
+  precise(arg0: any) {
+    let amount: string;
+    if (isTokenAmount(arg0)) {
+      invariant(arg0.token.is(this.token), "different tokens can't be clone");
+      amount = arg0.amount;
+    } else {
+      amount = TokenAmount.precise(arg0, this.token.decimals);
+    }
+    return amount;
+  }
+
+  set(amount: string): TokenAmount;
+  set(tokenAmount: TokenAmount): TokenAmount;
+  set(arg0: any) {
+    this.amount = this.precise(arg0);
+    return this;
+  }
+  setWei(amountWei: BigNumberish) {
+    this.amount = toBigUnit(amountWei, this.token.decimals);
+    return this;
+  }
+
+  add(amount: string): TokenAmount;
+  add(tokenAmount: TokenAmount): TokenAmount;
+  add(arg0: any) {
+    this.amount = BigNumberJS(this.amount).plus(this.precise(arg0)).toFixed();
+    return this;
+  }
+  addWei(amountWei: BigNumberish) {
+    this.amount = BigNumberJS(this.amount).plus(toBigUnit(amountWei, this.token.decimals)).toFixed();
+    return this;
+  }
+
+  sub(amount: string): TokenAmount;
+  sub(tokenAmount: TokenAmount): TokenAmount;
+  sub(arg0: any) {
+    this.amount = BigNumberJS(this.amount).minus(this.precise(arg0)).toFixed();
+    return this;
+  }
+  subWei(amountWei: BigNumberish) {
+    this.amount = BigNumberJS(this.amount).minus(toBigUnit(amountWei, this.token.decimals)).toFixed();
+    return this;
+  }
+
+  get isZero() {
+    return BigNumberJS(this.amount).isZero();
+  }
+
+  eq(amount: string): boolean;
+  eq(tokenAmount: TokenAmount): boolean;
+  eq(arg0: any) {
+    if (isTokenAmount(arg0)) {
+      return this.amountWei.eq(arg0.amountWei);
+    } else {
+      return BigNumberJS(this.amount).eq(arg0);
+    }
+  }
+
+  gt(amount: string): boolean;
+  gt(tokenAmount: TokenAmount): boolean;
+  gt(arg0: any) {
+    if (isTokenAmount(arg0)) {
+      return this.amountWei.gt(arg0.amountWei);
+    } else {
+      return BigNumberJS(this.amount).gt(arg0);
+    }
+  }
+
+  gte(amount: string): boolean;
+  gte(tokenAmount: TokenAmount): boolean;
+  gte(arg0: any) {
+    if (isTokenAmount(arg0)) {
+      return this.amountWei.gte(arg0.amountWei);
+    } else {
+      return BigNumberJS(this.amount).gte(arg0);
+    }
+  }
+
+  lt(amount: string): boolean;
+  lt(tokenAmount: TokenAmount): boolean;
+  lt(arg0: any) {
+    if (isTokenAmount(arg0)) {
+      return this.amountWei.lt(arg0.amountWei);
+    } else {
+      return BigNumberJS(this.amount).lt(arg0);
+    }
+  }
+
+  lte(amount: string): boolean;
+  lte(tokenAmount: TokenAmount): boolean;
+  lte(arg0: any) {
+    if (isTokenAmount(arg0)) {
+      return this.amountWei.lte(arg0.amountWei);
+    } else {
+      return BigNumberJS(this.amount).lte(arg0);
+    }
+  }
+
+  toObject(): TokenAmountObject {
+    return { token: this.token.toObject(), amount: this.amount };
+  }
+
+  toValues(): [string, BigNumber] {
+    return [this.token.address, this.amountWei];
+  }
+
+  clone() {
+    return new TokenAmount(this.token, this.amount);
+  }
+}
+
+export type TokenAmountTypes = TokenAmountObject | TokenAmountPair | TokenAmount;
+
+export function isTokenAmountObject(v: any): v is TokenAmountObject {
+  return typeof v === 'object' && isTokenTypes(v.token) && typeof v.amount === 'string' && !isTokenAmount(v);
+}
+
+export function isTokenAmountPair(v: any): v is TokenAmountPair {
+  return Array.isArray(v) && isTokenTypes(v[0]) && typeof v[1] === 'string';
+}
+
+export function isTokenAmount(v: any): v is TokenAmount {
+  return v instanceof TokenAmount;
+}
+
+export function isTokenAmountTypes(v: any): v is TokenAmountTypes {
+  return isTokenAmountObject(v) || isTokenAmountPair(v) || isTokenAmount(v);
+}
+
+export class TokenAmounts {
+  tokenAmountMap: Record<string, TokenAmount> = {};
+
+  constructor(tokenAmounts: TokenAmountTypes[]);
+  constructor(...tokenAmounts: TokenAmountTypes[]);
+  constructor(arg0: any, ...otherArgs: any[]) {
+    if (arg0) {
+      if (isTokenAmountTypes(arg0)) {
+        this.add(arg0);
+      } else {
+        for (const tokenAmount of arg0) {
+          this.add(tokenAmount);
+        }
+      }
+    }
+    for (const tokenAmount of otherArgs) {
+      this.add(tokenAmount);
+    }
+  }
+
+  static from(tokenAmounts: TokenAmountsTypes) {
+    return isTokenAmounts(tokenAmounts) ? tokenAmounts : new TokenAmounts(tokenAmounts);
+  }
+
+  get length() {
+    return Object.keys(this.tokenAmountMap).length;
+  }
+
+  at(index: number) {
+    return this.toArray()[index];
+  }
+
+  get(tokenOrAddress: TokenOrAddress) {
+    return this.tokenAmountMap[Token.getAddress(tokenOrAddress)];
+  }
+
+  set(token: TokenTypes, amount: string): TokenAmounts;
+  set(tokenAmount: TokenAmountTypes): TokenAmounts;
+  set(arg0: any, arg1?: any) {
+    const tokenAmount = new TokenAmount(arg0, arg1);
+    this.tokenAmountMap[tokenAmount.token.address] = tokenAmount;
+    return this;
+  }
+
+  has(tokenOrAddress: TokenOrAddress): boolean {
+    return !!this.get(tokenOrAddress);
+  }
+
+  add(token: TokenTypes, amount: string): TokenAmounts;
+  add(tokenAmount: TokenAmountTypes): TokenAmounts;
+  add(arg0: any, arg1?: any) {
+    const tokenAmount = new TokenAmount(arg0, arg1);
+    if (this.has(tokenAmount.token)) {
+      this.tokenAmountMap[tokenAmount.token.address].add(tokenAmount);
+    } else {
+      this.set(tokenAmount);
+    }
+    return this;
+  }
+
+  sub(token: TokenTypes, amount: string): TokenAmounts;
+  sub(tokenAmount: TokenAmountTypes): TokenAmounts;
+  sub(arg0: any, arg1?: any) {
+    const tokenAmount = new TokenAmount(arg0, arg1);
+    if (this.has(tokenAmount.token)) {
+      this.tokenAmountMap[tokenAmount.token.address].sub(tokenAmount);
+    }
+    return this;
+  }
+
+  toArray() {
+    return Object.keys(this.tokenAmountMap).map((tokenAddress) => this.tokenAmountMap[tokenAddress]);
+  }
+
+  toObject() {
+    return orderBy(
+      Object.keys(this.tokenAmountMap).map((tokenAddress) => this.tokenAmountMap[tokenAddress].toObject()),
+      'token.symbol'
+    );
+  }
+
+  toJSON() {
+    return this.toObject();
+  }
+
+  toValues() {
+    return Object.keys(this.tokenAmountMap).reduce(
+      (accumulator, tokenAddress) => {
+        accumulator[0].push(tokenAddress);
+        accumulator[1].push(this.tokenAmountMap[tokenAddress].amountWei);
+
+        return accumulator;
+      },
+      [[], []] as [string[], BigNumber[]]
+    );
+  }
+
+  compact() {
+    const tokenAmounts = new TokenAmounts();
+    Object.keys(this.tokenAmountMap).forEach((tokenAddress) => {
+      if (!this.tokenAmountMap[tokenAddress].isZero) {
+        tokenAmounts.add(this.tokenAmountMap[tokenAddress]);
+      }
+    });
+    return tokenAmounts;
+  }
+
+  get isEmpty() {
+    return this.length === 0;
+  }
+
+  get native() {
+    let nativeTokenAmount: TokenAmount | undefined;
+    for (const tokenAddress of Object.keys(this.tokenAmountMap)) {
+      const tokenAmount = this.tokenAmountMap[tokenAddress];
+      if (tokenAmount.token.isNative) {
+        nativeTokenAmount = tokenAmount;
+        break;
+      }
+    }
+    return nativeTokenAmount;
+  }
+
+  get erc20() {
+    return Object.keys(this.tokenAmountMap).reduce((accumulator, tokenAddress) => {
+      const tokenAmount = this.tokenAmountMap[tokenAddress];
+      if (!tokenAmount.token.isNative) accumulator.set(tokenAmount);
+      return accumulator;
+    }, new TokenAmounts());
+  }
+
+  get tokens() {
+    return Object.keys(this.tokenAmountMap).reduce((accumulator, tokenAddress) => {
+      accumulator.push(this.tokenAmountMap[tokenAddress].token);
+      return accumulator;
+    }, [] as Token[]);
+  }
+
+  forEach(callbackfn: (value: TokenAmount, index: number, array: TokenAmounts) => void): void {
+    Object.keys(this.tokenAmountMap).map((tokenAddress, index) =>
+      callbackfn(this.tokenAmountMap[tokenAddress], index, this)
+    );
+  }
+
+  map<U>(callbackfn: (value: TokenAmount, index: number, array: TokenAmounts) => U): U[] {
+    return Object.keys(this.tokenAmountMap).map((tokenAddress, index) =>
+      callbackfn(this.tokenAmountMap[tokenAddress], index, this)
+    );
+  }
+
+  merge(sources: TokenAmounts | TokenAmounts[]) {
+    let tokenAmountsArray: TokenAmounts[] = [this];
+    if (Array.isArray(sources)) {
+      tokenAmountsArray = tokenAmountsArray.concat(sources);
+    } else {
+      tokenAmountsArray.push(sources);
+    }
+    const newTokenAmounts = new TokenAmounts();
+    for (const tokenAmounts of tokenAmountsArray) {
+      Object.keys(tokenAmounts.tokenAmountMap).forEach((tokenAddress) => {
+        newTokenAmounts.add(tokenAmounts.tokenAmountMap[tokenAddress]);
+      });
+    }
+
+    return newTokenAmounts;
+  }
+}
+
+export type TokenAmountsTypes = TokenAmountTypes[] | TokenAmounts;
+
+export function isTokenAmounts(v: any): v is TokenAmounts {
+  return v instanceof TokenAmounts;
+}
+
+export function isTokenAmountsTypes(v: any): v is TokenAmountsTypes {
+  return (Array.isArray(v) && isTokenAmountTypes(v[0])) || isTokenAmounts(v);
+}

@@ -1,0 +1,35 @@
+name: E2E Test
+
+on:
+  push:
+  pull_request:
+
+env:
+  MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+
+jobs:
+  run-e2e-test:
+    name: Run e2e test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build packages
+        run: |
+          yarn workspace @falcon/common build
+          yarn workspace @falcon/core build
+          yarn workspace @falcon/test-helpers build
+          yarn workspace @falcon/smart-accounts build
+          yarn workspace @falcon/api build
+
+      - name: Run e2e test
+        run: yarn test:e2e
