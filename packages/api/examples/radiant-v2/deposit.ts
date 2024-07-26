@@ -51,13 +51,13 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 42161;
 
-  const tokenList = await api.protocols.radiantv2.getDepositTokenList(chainId);
+  const tokenList = await api.falconsdk.radiantv2.getDepositTokenList(chainId);
   const underlyingToken = tokenList[0][0];
   const rToken = tokenList[0][1];
   console.log('underlyingToken :>> ', JSON.stringify(underlyingToken, null, 2));
   console.log('rToken :>> ', JSON.stringify(rToken, null, 2));
 
-  const depositQuotation = await api.protocols.radiantv2.getDepositQuotation(chainId, {
+  const depositQuotation = await api.falconsdk.radiantv2.getDepositQuotation(chainId, {
     input: {
       token: underlyingToken,
       amount: '10',
@@ -66,6 +66,6 @@ import * as api from '@falcon/api';
   });
   console.log('depositQuotation :>> ', JSON.stringify(depositQuotation, null, 2));
 
-  const depositLogic = await api.protocols.radiantv2.newDepositLogic(depositQuotation);
+  const depositLogic = await api.falconsdk.radiantv2.newDepositLogic(depositQuotation);
   console.log('depositLogic :>> ', JSON.stringify(depositLogic, null, 2));
 })();

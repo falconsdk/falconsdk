@@ -369,32 +369,32 @@ export class LendingProtocol extends Protocol {
     const { baseToken, comet } = getMarketConfig(this.chainId, marketId);
 
     if (input.token.wrapped.is(baseToken)) {
-      return apisdk.protocols.compoundv3.newSupplyBaseLogic({
+      return apisdk.falconsdk.compoundv3.newSupplyBaseLogic({
         marketId,
         input,
         output: new common.TokenAmount(comet, input.amount),
       });
     } else {
-      return apisdk.protocols.compoundv3.newSupplyCollateralLogic({ marketId, input });
+      return apisdk.falconsdk.compoundv3.newSupplyCollateralLogic({ marketId, input });
     }
   }
 
   newWithdrawLogic({ marketId, output }: WithdrawParams) {
     const { baseToken, comet } = getMarketConfig(this.chainId, marketId);
     if (output.token.wrapped.is(baseToken)) {
-      return apisdk.protocols.compoundv3.newWithdrawBaseLogic({
+      return apisdk.falconsdk.compoundv3.newWithdrawBaseLogic({
         marketId,
         input: new common.TokenAmount(comet, output.amount),
         output,
       });
     } else {
-      return apisdk.protocols.compoundv3.newWithdrawCollateralLogic({ marketId, output });
+      return apisdk.falconsdk.compoundv3.newWithdrawCollateralLogic({ marketId, output });
     }
   }
 
-  newBorrowLogic = apisdk.protocols.compoundv3.newBorrowLogic;
+  newBorrowLogic = apisdk.falconsdk.compoundv3.newBorrowLogic;
 
   newRepayLogic({ marketId, input, account }: RepayParams) {
-    return apisdk.protocols.compoundv3.newRepayLogic({ marketId, input, borrower: account });
+    return apisdk.falconsdk.compoundv3.newRepayLogic({ marketId, input, borrower: account });
   }
 }

@@ -55,13 +55,13 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 1088;
 
-  const tokenList = await api.protocols.openoceanv2.getSwapTokenTokenList(chainId);
+  const tokenList = await api.falconsdk.openoceanv2.getSwapTokenTokenList(chainId);
   const tokenIn = tokenList[0];
   const tokenOut = tokenList[2];
   console.log('tokenIn :>> ', JSON.stringify(tokenIn, null, 2));
   console.log('tokenOut :>> ', JSON.stringify(tokenOut, null, 2));
 
-  const swapTokenQuotation = await api.protocols.openoceanv2.getSwapTokenQuotation(chainId, {
+  const swapTokenQuotation = await api.falconsdk.openoceanv2.getSwapTokenQuotation(chainId, {
     input: {
       token: tokenIn,
       amount: '10',
@@ -71,6 +71,6 @@ import * as api from '@falcon/api';
   });
   console.log('swapTokenQuotation :>> ', JSON.stringify(swapTokenQuotation, null, 2));
 
-  const swapTokenLogic = await api.protocols.openoceanv2.newSwapTokenLogic(swapTokenQuotation);
+  const swapTokenLogic = await api.falconsdk.openoceanv2.newSwapTokenLogic(swapTokenQuotation);
   console.log('swapTokenLogic :>> ', JSON.stringify(swapTokenLogic, null, 2));
 })();

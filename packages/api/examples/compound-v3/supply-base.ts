@@ -55,13 +55,13 @@ import * as logics from '@falcon/logics';
   const chainId = 1;
   const marketId = logics.compoundv3.MarketId.USDC;
 
-  const tokenList = await api.protocols.compoundv3.getSupplyBaseTokenList(chainId);
+  const tokenList = await api.falconsdk.compoundv3.getSupplyBaseTokenList(chainId);
   const baseToken = tokenList[marketId][0][0];
   const cToken = tokenList[marketId][0][1];
   console.log('baseToken :>> ', JSON.stringify(baseToken, null, 2));
   console.log('cToken :>> ', JSON.stringify(cToken, null, 2));
 
-  const supplyBaseQuotation = await api.protocols.compoundv3.getSupplyBaseQuotation(chainId, {
+  const supplyBaseQuotation = await api.falconsdk.compoundv3.getSupplyBaseQuotation(chainId, {
     marketId,
     input: {
       token: baseToken,
@@ -71,6 +71,6 @@ import * as logics from '@falcon/logics';
   });
   console.log('supplyBaseQuotation :>> ', JSON.stringify(supplyBaseQuotation, null, 2));
 
-  const supplyBaseLogic = await api.protocols.compoundv3.newSupplyBaseLogic(supplyBaseQuotation);
+  const supplyBaseLogic = await api.falconsdk.compoundv3.newSupplyBaseLogic(supplyBaseQuotation);
   console.log('supplyBaseLogic :>> ', JSON.stringify(supplyBaseLogic, null, 2));
 })();

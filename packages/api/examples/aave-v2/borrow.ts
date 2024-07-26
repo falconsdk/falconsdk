@@ -23,11 +23,11 @@ import * as logics from '@falcon/logics';
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.aavev2.getBorrowTokenList(chainId);
+  const tokenList = await api.falconsdk.aavev2.getBorrowTokenList(chainId);
   const underlyingToken = tokenList[0];
   console.log('underlyingToken :>> ', JSON.stringify(underlyingToken, null, 2));
 
-  const borrowLogic = await api.protocols.aavev2.newBorrowLogic({
+  const borrowLogic = await api.falconsdk.aavev2.newBorrowLogic({
     interestRateMode: logics.aavev2.InterestRateMode.variable,
     output: {
       token: underlyingToken,

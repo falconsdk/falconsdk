@@ -7,7 +7,7 @@ import * as common from '@falcon/common';
 import { expect } from 'chai';
 import hre from 'hardhat';
 import * as logics from '@falcon/logics';
-import * as spark from 'src/protocols/spark/tokens';
+import * as spark from 'src/falconsdk/spark/tokens';
 import * as utils from 'test/utils';
 
 describe('Transaction: Collateral swap', function () {

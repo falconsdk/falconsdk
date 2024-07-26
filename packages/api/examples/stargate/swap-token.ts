@@ -57,13 +57,13 @@ import * as api from '@falcon/api';
   const chainId = 1;
   const receiver = '0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa';
 
-  const tokenList = await api.protocols.stargate.getSwapTokenTokenList(chainId);
+  const tokenList = await api.falconsdk.stargate.getSwapTokenTokenList(chainId);
   const tokenIn = tokenList[0].srcToken;
   const tokenOut = tokenList[0].destTokenLists[0].tokens[0];
   console.log('tokenIn :>> ', JSON.stringify(tokenIn, null, 2));
   console.log('tokenOut :>> ', JSON.stringify(tokenOut, null, 2));
 
-  const swapTokenQuotation = await api.protocols.stargate.getSwapTokenQuotation(chainId, {
+  const swapTokenQuotation = await api.falconsdk.stargate.getSwapTokenQuotation(chainId, {
     input: {
       token: tokenIn,
       amount: '10',
@@ -74,6 +74,6 @@ import * as api from '@falcon/api';
   });
   console.log('swapTokenQuotation :>> ', JSON.stringify(swapTokenQuotation, null, 2));
 
-  const swapTokenLogic = await api.protocols.stargate.newSwapTokenLogic(swapTokenQuotation);
+  const swapTokenLogic = await api.falconsdk.stargate.newSwapTokenLogic(swapTokenQuotation);
   console.log('swapTokenLogic :>> ', JSON.stringify(swapTokenLogic, null, 2));
 })();

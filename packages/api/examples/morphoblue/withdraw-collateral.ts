@@ -23,11 +23,11 @@ import * as api from '@falcon/api';
   const chainId = 1;
   const marketId = '0xb323495f7e4148be5643a4ea4a8221eef163e4bccfdedc2a6f4696baacbc86cc';
 
-  const tokenList = await api.protocols.morphoblue.getWithdrawCollateralTokenList(chainId);
+  const tokenList = await api.falconsdk.morphoblue.getWithdrawCollateralTokenList(chainId);
   const asset = tokenList[marketId][0];
   console.log('asset :>> ', JSON.stringify(asset, null, 2));
 
-  const withdrawCollateralLogic = await api.protocols.morphoblue.newWithdrawCollateralLogic({
+  const withdrawCollateralLogic = await api.falconsdk.morphoblue.newWithdrawCollateralLogic({
     marketId,
     output: {
       token: asset,

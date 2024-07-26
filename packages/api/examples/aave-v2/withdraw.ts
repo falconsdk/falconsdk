@@ -51,13 +51,13 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.aavev2.getWithdrawTokenList(chainId);
+  const tokenList = await api.falconsdk.aavev2.getWithdrawTokenList(chainId);
   const aToken = tokenList[0][0];
   const underlyingToken = tokenList[0][1];
   console.log('aToken :>> ', JSON.stringify(aToken, null, 2));
   console.log('underlyingToken :>> ', JSON.stringify(underlyingToken, null, 2));
 
-  const withdrawQuotation = await api.protocols.aavev2.getWithdrawQuotation(chainId, {
+  const withdrawQuotation = await api.falconsdk.aavev2.getWithdrawQuotation(chainId, {
     input: {
       token: aToken,
       amount: '10',
@@ -66,6 +66,6 @@ import * as api from '@falcon/api';
   });
   console.log('withdrawQuotation :>> ', JSON.stringify(withdrawQuotation, null, 2));
 
-  const withdrawLogic = await api.protocols.aavev2.newWithdrawLogic(withdrawQuotation);
+  const withdrawLogic = await api.falconsdk.aavev2.newWithdrawLogic(withdrawQuotation);
   console.log('withdrawLogic :>> ', JSON.stringify(withdrawLogic, null, 2));
 })();

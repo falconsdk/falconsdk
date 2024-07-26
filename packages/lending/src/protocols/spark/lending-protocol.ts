@@ -136,7 +136,7 @@ export class LendingProtocol extends Protocol {
 
   async getTokensForDeposit() {
     if (!this._tokensForDeposit) {
-      const tokenList = await apisdk.protocols.spark.getSupplyTokenList(this.chainId);
+      const tokenList = await apisdk.falconsdk.spark.getSupplyTokenList(this.chainId);
 
       const tokens = tokenList.filter((tokens) => isSupplyEnabled(this.chainId, tokens[0])).map((tokens) => tokens[0]);
 
@@ -150,7 +150,7 @@ export class LendingProtocol extends Protocol {
 
   async getTokensForBorrow() {
     if (!this._tokensForBorrow) {
-      const tokenList = await apisdk.protocols.spark.getBorrowTokenList(this.chainId);
+      const tokenList = await apisdk.falconsdk.spark.getBorrowTokenList(this.chainId);
 
       const tokens = tokenList.filter((token) => isBorrowEnabled(this.chainId, token));
 
@@ -403,28 +403,28 @@ export class LendingProtocol extends Protocol {
   }
 
   newSupplyLogic({ marketId, input }: SupplyParams) {
-    return apisdk.protocols.spark.newSupplyLogic({
+    return apisdk.falconsdk.spark.newSupplyLogic({
       input,
       output: new common.TokenAmount(this.toProtocolToken(marketId, input.token), input.amount),
     });
   }
 
   newWithdrawLogic({ marketId, output }: WithdrawParams) {
-    return apisdk.protocols.spark.newWithdrawLogic({
+    return apisdk.falconsdk.spark.newWithdrawLogic({
       input: new common.TokenAmount(this.toProtocolToken(marketId, output.token), output.amount),
       output,
     });
   }
 
   newBorrowLogic({ output }: BorrowParams) {
-    return apisdk.protocols.spark.newBorrowLogic({
+    return apisdk.falconsdk.spark.newBorrowLogic({
       output,
       interestRateMode: logics.spark.InterestRateMode.variable,
     });
   }
 
   newRepayLogic({ input, account }: RepayParams) {
-    return apisdk.protocols.spark.newRepayLogic({
+    return apisdk.falconsdk.spark.newRepayLogic({
       input,
       borrower: account,
       interestRateMode: logics.spark.InterestRateMode.variable,

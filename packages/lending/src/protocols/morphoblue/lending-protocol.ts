@@ -224,13 +224,13 @@ export class LendingProtocol extends Protocol {
     return borrowApy;
   }
 
-  newSupplyLogic = apisdk.protocols.morphoblue.newSupplyCollateralLogic;
+  newSupplyLogic = apisdk.falconsdk.morphoblue.newSupplyCollateralLogic;
 
-  newWithdrawLogic = apisdk.protocols.morphoblue.newWithdrawCollateralLogic;
+  newWithdrawLogic = apisdk.falconsdk.morphoblue.newWithdrawCollateralLogic;
 
-  newBorrowLogic = apisdk.protocols.morphoblue.newBorrowLogic;
+  newBorrowLogic = apisdk.falconsdk.morphoblue.newBorrowLogic;
 
   newRepayLogic({ marketId, input, account }: RepayParams) {
-    return apisdk.protocols.morphoblue.newRepayLogic({ marketId, input, borrower: account });
+    return apisdk.falconsdk.morphoblue.newRepayLogic({ marketId, input, borrower: account });
   }
 }

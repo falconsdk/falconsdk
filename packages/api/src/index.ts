@@ -1,3 +1,3 @@
-export * as protocols from './protocols';
+export * as falconsdk from './falconsdk';
 export * from './api';
 export * from './types';

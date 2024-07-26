@@ -1,16 +1,16 @@
 import { RouterData } from './types';
-import { buildRouterTransactionRequest, estimateRouterData, getProtocolTokenList, getProtocols, quote } from './api';
+import { buildRouterTransactionRequest, estimateRouterData, getProtocolTokenList, getfalconsdk, quote } from './api';
 import * as common from '@falcon/common';
 import { expect } from 'chai';
 import * as logics from '@falcon/logics';
 import { mainnetTokens } from '@falcon/test-helpers';
-import * as utility from 'src/protocols/utility';
+import * as utility from 'src/falconsdk/utility';
 
 describe('API client', function () {
-  it('Test getProtocols', async function () {
-    const protocols = await getProtocols();
-    expect(protocols).to.have.lengthOf.above(0);
-    for (const protocol of protocols) {
+  it('Test getfalconsdk', async function () {
+    const falconsdk = await getfalconsdk();
+    expect(falconsdk).to.have.lengthOf.above(0);
+    for (const protocol of falconsdk) {
       expect(protocol).to.include.all.keys('id', 'logics');
       expect(protocol.logics).to.have.lengthOf.above(0);
       for (const logic of protocol.logics) {

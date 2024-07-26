@@ -15,7 +15,7 @@ More details and examples can be found at [SDK Overview](https://docs.falcon.com
 - The `api` package empowers developers to interact with the falcon API.
 - The `common` package empowers developers to deal with general information like token and network.
 - The `core` package defines the constants and the interfaces used in the falcon API.
-- The `lending` package empowers developers to rapidly build intent-centric applications and enhances the user experience for the lending protocols.
+- The `lending` package empowers developers to rapidly build intent-centric applications and enhances the user experience for the lending falconsdk.
 - The `smart-accounts` package manages the smart account integrated with the falcon API.
 - The `test-helpers` package provides utilities for developers to write tests.
 

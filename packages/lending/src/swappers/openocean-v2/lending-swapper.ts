@@ -19,21 +19,21 @@ export class LendingSwapper extends Swapper {
 
   async tokens() {
     if (!this._tokens) {
-      this._tokens = await apisdk.protocols.openoceanv2.getSwapTokenTokenList(this.chainId);
+      this._tokens = await apisdk.falconsdk.openoceanv2.getSwapTokenTokenList(this.chainId);
     }
     return this._tokens;
   }
 
   async quote(params: SwapperQuoteParams) {
     if (core.isTokenToTokenExactInParams(params)) {
-      return apisdk.protocols.openoceanv2.getSwapTokenQuotation(this.chainId, {
+      return apisdk.falconsdk.openoceanv2.getSwapTokenQuotation(this.chainId, {
         ...params,
         disabledDexIds: disabledDexIdsMap[this.chainId],
       });
     }
     // openocean can't quote with output, so using exact in to get exact out quotation
     else {
-      const quotation = await apisdk.protocols.openoceanv2.getSwapTokenQuotation(this.chainId, {
+      const quotation = await apisdk.falconsdk.openoceanv2.getSwapTokenQuotation(this.chainId, {
         input: params.output,
         tokenOut: params.tokenIn,
         disabledDexIds: disabledDexIdsMap[this.chainId],
@@ -45,5 +45,5 @@ export class LendingSwapper extends Swapper {
     }
   }
 
-  newSwapTokenLogic = apisdk.protocols.openoceanv2.newSwapTokenLogic;
+  newSwapTokenLogic = apisdk.falconsdk.openoceanv2.newSwapTokenLogic;
 }

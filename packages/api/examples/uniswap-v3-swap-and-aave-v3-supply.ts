@@ -34,31 +34,31 @@ it('Uniswap V3 Swap + Aave V3 Supply', async function () {
   };
 
   // Step 1.
-  // Use `api.protocols.uniswapv3.getSwapTokenQuotation` to get a quote for
+  // Use `api.falconsdk.uniswapv3.getSwapTokenQuotation` to get a quote for
   // exchanging 1000 USDC to WBTC on Uniswap V3.
   // Additionally, slippage is optional. The type should be a number,
   // and the value should be in Basis Points, where 1 Basis Point equals 0.01%.
-  const swapQuotation = await api.protocols.uniswapv3.getSwapTokenQuotation(chainId, {
+  const swapQuotation = await api.falconsdk.uniswapv3.getSwapTokenQuotation(chainId, {
     input: { token: USDC, amount: '1000' },
     tokenOut: WBTC,
     slippage: 100, // 1%
   });
 
   // Step 2.
-  // Use `api.protocols.uniswapv3.newSwapTokenLogic` to build the swap Logic data.
-  const swapLogic = api.protocols.uniswapv3.newSwapTokenLogic(swapQuotation);
+  // Use `api.falconsdk.uniswapv3.newSwapTokenLogic` to build the swap Logic data.
+  const swapLogic = api.falconsdk.uniswapv3.newSwapTokenLogic(swapQuotation);
 
   // Step 3.
-  // Use `api.protocols.aavev3.getSupplyQuotation` to get a quote for supplying WBTC, which will essentially
+  // Use `api.falconsdk.aavev3.getSupplyQuotation` to get a quote for supplying WBTC, which will essentially
   // provide a 1:1 aEthWBTC.
-  const supplyQuotation = await api.protocols.aavev3.getSupplyQuotation(chainId, {
+  const supplyQuotation = await api.falconsdk.aavev3.getSupplyQuotation(chainId, {
     input: swapQuotation.output,
     tokenOut: aEthWBTC,
   });
 
   // Step 4.
-  // Use `api.protocols.aavev3.newSupplyLogic` to build the supply Logic data.
-  const supplyLogic = api.protocols.aavev3.newSupplyLogic(supplyQuotation);
+  // Use `api.falconsdk.aavev3.newSupplyLogic` to build the supply Logic data.
+  const supplyLogic = api.falconsdk.aavev3.newSupplyLogic(supplyQuotation);
   // Use BalanceLink to prevent swap slippage
   supplyLogic.fields.balanceBps = common.BPS_BASE;
 

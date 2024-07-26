@@ -1,7 +1,6 @@
 {
-  "name": "falcon-machao",
-  "version": "0.0.0",
-  "private": true,
+  "name": "falconsdk-v1",
+  "version": "1.1.0",
   "license": "MIT",
   "workspaces": {
     "packages": [
@@ -47,5 +46,19 @@
   },
   "engines": {
     "node": ">=16"
-  }
+  },
+  "description": "[![Lint](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/lint.yml/badge.svg)](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/lint.yml) [![Unit Test](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/unit-test.yml/badge.svg)](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/unit-test.yml) [![E2E Test](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/e2e-test.yml/badge.svg)](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/e2e-test.yml)",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/falconsdk/falconsdk.git"
+  },
+  "keywords": [
+    "123456"
+  ],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/falconsdk/falconsdk/issues"
+  },
+  "homepage": "https://github.com/falconsdk/falconsdk#readme"
 }

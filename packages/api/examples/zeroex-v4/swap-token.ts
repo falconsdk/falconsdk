@@ -57,13 +57,13 @@ const apiKey = process.env.ZEROEX_API_KEY as string;
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.zeroexv4.getSwapTokenTokenList(chainId);
+  const tokenList = await api.falconsdk.zeroexv4.getSwapTokenTokenList(chainId);
   const tokenIn = tokenList[0];
   const tokenOut = tokenList[2];
   console.log('tokenIn :>> ', JSON.stringify(tokenIn, null, 2));
   console.log('tokenOut :>> ', JSON.stringify(tokenOut, null, 2));
 
-  const swapTokenQuotation = await api.protocols.zeroexv4.getSwapTokenQuotation(chainId, {
+  const swapTokenQuotation = await api.falconsdk.zeroexv4.getSwapTokenQuotation(chainId, {
     input: {
       token: tokenIn,
       amount: '10',
@@ -73,7 +73,7 @@ const apiKey = process.env.ZEROEX_API_KEY as string;
     apiKey,
   });
 
-  const swapTokenLogic = await api.protocols.zeroexv4.newSwapTokenLogic(swapTokenQuotation);
+  const swapTokenLogic = await api.falconsdk.zeroexv4.newSwapTokenLogic(swapTokenQuotation);
 
   swapTokenQuotation.apiKey = ''; // only used for hiding the key, do not use it in your project
   swapTokenLogic.fields.apiKey = ''; // only used for hiding the key, do not use it in your project

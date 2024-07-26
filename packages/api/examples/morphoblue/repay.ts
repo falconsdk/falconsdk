@@ -37,17 +37,17 @@ import * as api from '@falcon/api';
   const marketId = '0xb323495f7e4148be5643a4ea4a8221eef163e4bccfdedc2a6f4696baacbc86cc';
   const account = '0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa';
 
-  const tokenList = await api.protocols.morphoblue.getRepayTokenList(chainId);
+  const tokenList = await api.falconsdk.morphoblue.getRepayTokenList(chainId);
   const loanToken = tokenList[marketId][0];
   console.log('loanToken :>> ', JSON.stringify(loanToken, null, 2));
 
-  const repayQuotation = await api.protocols.morphoblue.getRepayQuotation(chainId, {
+  const repayQuotation = await api.falconsdk.morphoblue.getRepayQuotation(chainId, {
     marketId,
     tokenIn: loanToken,
     borrower: account,
   });
   console.log('repayQuotation :>> ', JSON.stringify(repayQuotation, null, 2));
 
-  const repayLogic = await api.protocols.morphoblue.newRepayLogic(repayQuotation);
+  const repayLogic = await api.falconsdk.morphoblue.newRepayLogic(repayQuotation);
   console.log('repayLogic :>> ', JSON.stringify(repayLogic, null, 2));
 })();

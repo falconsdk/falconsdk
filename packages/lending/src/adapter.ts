@@ -19,14 +19,14 @@ import { providers } from 'ethers';
 import { scaleRepayAmount } from './adapter.utils';
 
 export class Adapter extends common.Web3Toolkit {
-  static Protocols: ProtocolClass[] = [];
+  static falconsdk: ProtocolClass[] = [];
 
   /**
    * Registers a new protocol to the Adapter.
    * @param {ProtocolClass} protocol - The protocol class to be registered.
    */
   static registerProtocol(protocol: ProtocolClass) {
-    this.Protocols.push(protocol);
+    this.falconsdk.push(protocol);
   }
 
   static Swappers: SwapperClass[] = [];
@@ -55,7 +55,7 @@ export class Adapter extends common.Web3Toolkit {
   }
 
   async initializeConfig() {
-    for (const Protocol of Adapter.Protocols) {
+    for (const Protocol of Adapter.falconsdk) {
       if (Protocol.isSupported(this.chainId)) {
         const protocol = await Protocol.createProtocol(this.chainId, this.provider);
         this.protocolMap[protocol.id] = protocol;
@@ -166,12 +166,12 @@ export class Adapter extends common.Web3Toolkit {
   }
 
   /**
-   * Retrieves an array of portfolios for a given account from all registered protocols.
+   * Retrieves an array of portfolios for a given account from all registered falconsdk.
    *
    * @param {string} account - The account identifier for which portfolios are to be retrieved.
    * @param {Object} [options] - Optional parameters.
    * @param {string|number} [options.blockTag] - An optional block tag
-   * @returns {Promise<Portfolio[]>} A promise that resolves to an array of Portfolio objects from all protocols.
+   * @returns {Promise<Portfolio[]>} A promise that resolves to an array of Portfolio objects from all falconsdk.
    */
   async getPortfolios(account: string, options?: { blockTag?: string | number }): Promise<Portfolio[]> {
     const portfolios = await Promise.all(
@@ -470,13 +470,13 @@ export class Adapter extends common.Web3Toolkit {
           output.afterPortfolio = zapRepayOutput.afterPortfolio;
         }
 
-        const flashLoanAggregatorQuotation = await apisdk.protocols.utility.getFlashLoanAggregatorQuotation(
+        const flashLoanAggregatorQuotation = await apisdk.falconsdk.utility.getFlashLoanAggregatorQuotation(
           this.chainId,
           { loans: [flashLoanLoan], protocolId: protocol.preferredFlashLoanProtocolId }
         );
         flashLoanRepay.set(flashLoanAggregatorQuotation.repays.get(withdrawalToken.wrapped));
 
-        const [loanLogic, repayLogic] = apisdk.protocols.utility.newFlashLoanAggregatorLogicPair(
+        const [loanLogic, repayLogic] = apisdk.falconsdk.utility.newFlashLoanAggregatorLogicPair(
           flashLoanAggregatorQuotation.protocolId,
           flashLoanAggregatorQuotation.loans.toArray()
         );
@@ -507,7 +507,7 @@ export class Adapter extends common.Web3Toolkit {
           if (protocol.isAssetTokenized(marketId, supply.token)) {
             // 2-1-1. add src protocol token to agent
             const withdrawLogic = zapWithdrawOutput.logics[0];
-            const addFundsLogic = apisdk.protocols.permit2.newPullTokenLogic({
+            const addFundsLogic = apisdk.falconsdk.permit2.newPullTokenLogic({
               input: withdrawLogic.fields.input!,
             });
             output.logics.push(addFundsLogic);
@@ -524,7 +524,7 @@ export class Adapter extends common.Web3Toolkit {
         if (flashLoanRepayLogic) output.logics.push(flashLoanRepayLogic);
 
         if (withdrawalToken.isNative && Number(withdrawal.amount) > 0) {
-          const wrapNativeLogic = apisdk.protocols.utility.newWrappedNativeTokenLogic({
+          const wrapNativeLogic = apisdk.falconsdk.utility.newWrappedNativeTokenLogic({
             input: { token: zapWithdraw.token, amount: withdrawal.amount },
             output: withdrawal,
           });
@@ -599,7 +599,7 @@ export class Adapter extends common.Web3Toolkit {
             flashLoanRepay.subWei(2);
           }
 
-          const flashLoanAggregatorQuotation = await apisdk.protocols.utility.getFlashLoanAggregatorQuotation(
+          const flashLoanAggregatorQuotation = await apisdk.falconsdk.utility.getFlashLoanAggregatorQuotation(
             this.chainId,
             { repays: [flashLoanRepay], protocolId: protocol.preferredFlashLoanProtocolId }
           );
@@ -626,7 +626,7 @@ export class Adapter extends common.Web3Toolkit {
           }
 
           // 3. ---------- flashloan ----------
-          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.protocols.utility.newFlashLoanAggregatorLogicPair(
+          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.falconsdk.utility.newFlashLoanAggregatorLogicPair(
             flashLoanAggregatorQuotation.protocolId,
             flashLoanAggregatorQuotation.loans.toArray()
           );
@@ -648,7 +648,7 @@ export class Adapter extends common.Web3Toolkit {
           // 6-1. if protocol is collateral tokenized
           if (protocol.isAssetTokenized(marketId, withdrawOutput.token)) {
             // 6-1-1. return dest protocol token to user
-            const returnFundsLogic = apisdk.protocols.utility.newSendTokenLogic({
+            const returnFundsLogic = apisdk.falconsdk.utility.newSendTokenLogic({
               input: supplyLogic.fields.output!,
               recipient: account,
             });
@@ -656,7 +656,7 @@ export class Adapter extends common.Web3Toolkit {
             output.logics.push(returnFundsLogic);
 
             // 6-1-2. add src protocol token to agent
-            const addFundsLogic = apisdk.protocols.permit2.newPullTokenLogic({
+            const addFundsLogic = apisdk.falconsdk.permit2.newPullTokenLogic({
               input: withdrawLogic.fields.input!,
             });
             output.logics.push(addFundsLogic);
@@ -750,7 +750,7 @@ export class Adapter extends common.Web3Toolkit {
             throw new OperationError('srcAmount', 'NO_ROUTE_FOUND_OR_PRICE_IMPACT_TOO_HIGH');
           }
           // 3-3.flash loan dest amount and insert before swap token logic
-          const flashLoanAggregatorQuotation = await apisdk.protocols.utility.getFlashLoanAggregatorQuotation(
+          const flashLoanAggregatorQuotation = await apisdk.falconsdk.utility.getFlashLoanAggregatorQuotation(
             this.chainId,
             { loans: [swapQuotation.input], protocolId: protocol.preferredFlashLoanProtocolId }
           );
@@ -765,7 +765,7 @@ export class Adapter extends common.Web3Toolkit {
           }
 
           // 4. ---------- flashloan ----------
-          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.protocols.utility.newFlashLoanAggregatorLogicPair(
+          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.falconsdk.utility.newFlashLoanAggregatorLogicPair(
             flashLoanAggregatorQuotation.protocolId,
             flashLoanAggregatorQuotation.loans.toArray()
           );
@@ -877,7 +877,7 @@ export class Adapter extends common.Web3Toolkit {
           }
 
           // 1-4. get flash loan quotation
-          const flashLoanAggregatorQuotation = await apisdk.protocols.utility.getFlashLoanAggregatorQuotation(
+          const flashLoanAggregatorQuotation = await apisdk.falconsdk.utility.getFlashLoanAggregatorQuotation(
             this.chainId,
             { loans: [flashLoanLoan], protocolId: protocol.preferredFlashLoanProtocolId }
           );
@@ -892,7 +892,7 @@ export class Adapter extends common.Web3Toolkit {
           }
 
           // 2. ---------- flashloan ----------
-          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.protocols.utility.newFlashLoanAggregatorLogicPair(
+          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.falconsdk.utility.newFlashLoanAggregatorLogicPair(
             flashLoanAggregatorQuotation.protocolId,
             flashLoanAggregatorQuotation.loans.toArray()
           );
@@ -916,7 +916,7 @@ export class Adapter extends common.Web3Toolkit {
           // 5-1. if protocol is collateral tokenized
           if (protocol.isAssetTokenized(marketId, supplyInput.token)) {
             // 5-1-1. return protocol token to user
-            const returnFundsLogic = apisdk.protocols.utility.newSendTokenLogic({
+            const returnFundsLogic = apisdk.falconsdk.utility.newSendTokenLogic({
               input: supplyLogic.fields.output!,
               recipient: account,
             });
@@ -985,7 +985,7 @@ export class Adapter extends common.Web3Toolkit {
         try {
           // 1. ---------- Pre-calc quotation ----------
           // 1-1. get flash loan quotation
-          const flashLoanAggregatorQuotation = await apisdk.protocols.utility.getFlashLoanAggregatorQuotation(
+          const flashLoanAggregatorQuotation = await apisdk.falconsdk.utility.getFlashLoanAggregatorQuotation(
             this.chainId,
             {
               loans: [{ token: srcToken.wrapped, amount: srcAmount }],
@@ -1028,7 +1028,7 @@ export class Adapter extends common.Web3Toolkit {
           }
 
           // 2. ---------- flashloan ----------
-          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.protocols.utility.newFlashLoanAggregatorLogicPair(
+          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.falconsdk.utility.newFlashLoanAggregatorLogicPair(
             flashLoanAggregatorQuotation.protocolId,
             flashLoanAggregatorQuotation.loans.toArray()
           );
@@ -1052,7 +1052,7 @@ export class Adapter extends common.Web3Toolkit {
           // 5-1. if protocol is collateral tokenized
           if (protocol.isAssetTokenized(marketId, supplyInput.token)) {
             // 5-1-1. return protocol token to user
-            const returnFundsLogic = apisdk.protocols.utility.newSendTokenLogic({
+            const returnFundsLogic = apisdk.falconsdk.utility.newSendTokenLogic({
               input: supplyLogic.fields.output!,
               recipient: account,
             });
@@ -1169,7 +1169,7 @@ export class Adapter extends common.Web3Toolkit {
           }
 
           // 3. obtain the flash loan quotation
-          const flashLoanAggregatorQuotation = await apisdk.protocols.utility.getFlashLoanAggregatorQuotation(
+          const flashLoanAggregatorQuotation = await apisdk.falconsdk.utility.getFlashLoanAggregatorQuotation(
             this.chainId,
             { loans: [flashLoanLoan], protocolId: protocol.preferredFlashLoanProtocolId }
           );
@@ -1190,7 +1190,7 @@ export class Adapter extends common.Web3Toolkit {
           }
 
           // 5. ---------- flashloan ----------
-          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.protocols.utility.newFlashLoanAggregatorLogicPair(
+          const [flashLoanLoanLogic, flashLoanRepayLogic] = apisdk.falconsdk.utility.newFlashLoanAggregatorLogicPair(
             flashLoanAggregatorQuotation.protocolId,
             flashLoanAggregatorQuotation.loans.toArray()
           );
@@ -1215,7 +1215,7 @@ export class Adapter extends common.Web3Toolkit {
           // 8-1. if protocol is collateral tokenized
           if (protocol.isAssetTokenized(marketId, withdrawOutput.token)) {
             // 8-1-1. add src protocol token to agent
-            const addFundsLogic = apisdk.protocols.permit2.newPullTokenLogic({
+            const addFundsLogic = apisdk.falconsdk.permit2.newPullTokenLogic({
               input: withdrawLogic.fields.input!,
             });
             output.logics.push(addFundsLogic);

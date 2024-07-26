@@ -18,14 +18,14 @@ export class LendingSwapper extends Swapper {
 
   async tokens() {
     if (!this._tokens) {
-      this._tokens = await apisdk.protocols.paraswapv5.getSwapTokenTokenList(this.chainId);
+      this._tokens = await apisdk.falconsdk.paraswapv5.getSwapTokenTokenList(this.chainId);
     }
     return this._tokens;
   }
 
   async quote(params: SwapperQuoteParams) {
-    return apisdk.protocols.paraswapv5.getSwapTokenQuotation(this.chainId, { ...params, excludeDEXS: ['BalancerV2'] });
+    return apisdk.falconsdk.paraswapv5.getSwapTokenQuotation(this.chainId, { ...params, excludeDEXS: ['BalancerV2'] });
   }
 
-  newSwapTokenLogic = apisdk.protocols.paraswapv5.newSwapTokenLogic;
+  newSwapTokenLogic = apisdk.falconsdk.paraswapv5.newSwapTokenLogic;
 }

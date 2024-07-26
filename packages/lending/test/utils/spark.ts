@@ -5,7 +5,7 @@ import { defaultInterestRateMode } from 'src/protocol.type';
 import { expect } from 'chai';
 import hre from 'hardhat';
 import * as logics from '@falcon/logics';
-import * as spark from 'src/protocols/spark/tokens';
+import * as spark from 'src/falconsdk/spark/tokens';
 
 export async function supply(chainId: number, user: SignerWithAddress, tokenAmount: common.TokenAmount) {
   const service = new logics.spark.Service(chainId, hre.ethers.provider);

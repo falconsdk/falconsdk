@@ -356,7 +356,7 @@
 
 ### Patch Changes
 
-- 6ed8de1: add getProtocols func
+- 6ed8de1: add getfalconsdk func
 
 ## 0.2.8
 

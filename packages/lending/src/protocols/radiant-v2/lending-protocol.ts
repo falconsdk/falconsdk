@@ -131,7 +131,7 @@ export class LendingProtocol extends Protocol {
 
   async getTokensForDeposit() {
     if (!this._tokensForDeposit) {
-      const tokenList = await apisdk.protocols.radiantv2.getDepositTokenList(this.chainId);
+      const tokenList = await apisdk.falconsdk.radiantv2.getDepositTokenList(this.chainId);
 
       const tokens = tokenList.filter((tokens) => isSupplyEnabled(this.chainId, tokens[0])).map((tokens) => tokens[0]);
 
@@ -145,7 +145,7 @@ export class LendingProtocol extends Protocol {
 
   async getTokensForBorrow() {
     if (!this._tokensForBorrow) {
-      const tokenList = await apisdk.protocols.radiantv2.getBorrowTokenList(this.chainId);
+      const tokenList = await apisdk.falconsdk.radiantv2.getBorrowTokenList(this.chainId);
 
       const tokens = tokenList.filter((token) => isBorrowEnabled(this.chainId, token));
 
@@ -361,28 +361,28 @@ export class LendingProtocol extends Protocol {
   }
 
   newSupplyLogic({ marketId, input }: SupplyParams) {
-    return apisdk.protocols.radiantv2.newDepositLogic({
+    return apisdk.falconsdk.radiantv2.newDepositLogic({
       input,
       output: new common.TokenAmount(this.toProtocolToken(marketId, input.token), input.amount),
     });
   }
 
   newWithdrawLogic({ marketId, output }: WithdrawParams) {
-    return apisdk.protocols.radiantv2.newWithdrawLogic({
+    return apisdk.falconsdk.radiantv2.newWithdrawLogic({
       input: new common.TokenAmount(this.toProtocolToken(marketId, output.token), output.amount),
       output,
     });
   }
 
   newBorrowLogic({ output }: BorrowParams) {
-    return apisdk.protocols.radiantv2.newBorrowLogic({
+    return apisdk.falconsdk.radiantv2.newBorrowLogic({
       output,
       interestRateMode: logics.radiantv2.InterestRateMode.variable,
     });
   }
 
   newRepayLogic({ input, account }: RepayParams) {
-    return apisdk.protocols.radiantv2.newRepayLogic({
+    return apisdk.falconsdk.radiantv2.newRepayLogic({
       input,
       borrower: account,
       interestRateMode: logics.radiantv2.InterestRateMode.variable,

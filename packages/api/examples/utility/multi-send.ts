@@ -22,13 +22,13 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.utility.getMultiSendTokenList(chainId);
+  const tokenList = await api.falconsdk.utility.getMultiSendTokenList(chainId);
   const tokenA = tokenList[0];
   const tokenB = tokenList[1];
   console.log('tokenA :>> ', JSON.stringify(tokenA, null, 2));
   console.log('tokenB :>> ', JSON.stringify(tokenB, null, 2));
 
-  const multiSendLogic = await api.protocols.utility.newMultiSendLogic([
+  const multiSendLogic = await api.falconsdk.utility.newMultiSendLogic([
     {
       input: {
         token: tokenA,

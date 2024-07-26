@@ -23,11 +23,11 @@ import * as api from '@falcon/api';
   const chainId = 1;
   const marketId = '0xb323495f7e4148be5643a4ea4a8221eef163e4bccfdedc2a6f4696baacbc86cc';
 
-  const tokenList = await api.protocols.morphoblue.getSupplyTokenList(chainId);
+  const tokenList = await api.falconsdk.morphoblue.getSupplyTokenList(chainId);
   const asset = tokenList[marketId][0];
   console.log('asset :>> ', JSON.stringify(asset, null, 2));
 
-  const supplyLogic = await api.protocols.morphoblue.newSupplyLogic({
+  const supplyLogic = await api.falconsdk.morphoblue.newSupplyLogic({
     marketId,
     input: {
       token: asset,

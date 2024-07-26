@@ -24,18 +24,18 @@ export interface Protocol {
   logics: { id: string; supportedChainIds: number[] }[];
 }
 
-export async function getProtocols(): Promise<Protocol[]> {
-  const resp = await client.get('/v1/protocols');
-  return resp.data.protocols;
+export async function getfalconsdk(): Promise<Protocol[]> {
+  const resp = await client.get('/v1/falconsdk');
+  return resp.data.falconsdk;
 }
 
 export async function getProtocolTokenList(chainId: number, rid: string) {
-  const resp = await client.get(`/v1/protocols/${chainId}/${rid.replace(/:/, '/')}/tokens`);
+  const resp = await client.get(`/v1/falconsdk/${chainId}/${rid.replace(/:/, '/')}/tokens`);
   return common.classifying(resp.data.tokens);
 }
 
 export async function quote(chainId: number, rid: string, data: any) {
-  const resp = await client.post(`/v1/protocols/${chainId}/${rid.replace(/:/, '/')}/quote`, data);
+  const resp = await client.post(`/v1/falconsdk/${chainId}/${rid.replace(/:/, '/')}/quote`, data);
   return common.classifying(resp.data);
 }
 

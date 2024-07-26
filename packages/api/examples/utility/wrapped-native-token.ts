@@ -51,13 +51,13 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.utility.getWrappedNativeTokenTokenList(chainId);
+  const tokenList = await api.falconsdk.utility.getWrappedNativeTokenTokenList(chainId);
   const wrapTokenIn = tokenList[0][0]; // native token
   const wrapTokenOut = tokenList[0][1]; // wrapped native token
   console.log('wrapTokenIn :>> ', JSON.stringify(wrapTokenIn, null, 2));
   console.log('wrapTokenOut :>> ', JSON.stringify(wrapTokenOut, null, 2));
 
-  const wrapQuotation = await api.protocols.utility.getWrappedNativeTokenQuotation(chainId, {
+  const wrapQuotation = await api.falconsdk.utility.getWrappedNativeTokenQuotation(chainId, {
     input: {
       token: wrapTokenIn,
       amount: '10',
@@ -66,7 +66,7 @@ import * as api from '@falcon/api';
   });
   console.log('wrapQuotation :>> ', JSON.stringify(wrapQuotation, null, 2));
 
-  const wrapLogic = api.protocols.utility.newWrappedNativeTokenLogic(wrapQuotation);
+  const wrapLogic = api.falconsdk.utility.newWrappedNativeTokenLogic(wrapQuotation);
   console.log('wrapLogic :>> ', JSON.stringify(wrapLogic, null, 2));
 
   const unwrapTokenIn = tokenList[1][0]; // wrapped native token
@@ -74,7 +74,7 @@ import * as api from '@falcon/api';
   console.log('unwrapTokenIn :>> ', JSON.stringify(unwrapTokenIn, null, 2));
   console.log('unwrapTokenOut :>> ', JSON.stringify(unwrapTokenOut, null, 2));
 
-  const unwrapQuotation = await api.protocols.utility.getWrappedNativeTokenQuotation(chainId, {
+  const unwrapQuotation = await api.falconsdk.utility.getWrappedNativeTokenQuotation(chainId, {
     input: {
       token: unwrapTokenIn,
       amount: '10',
@@ -83,6 +83,6 @@ import * as api from '@falcon/api';
   });
   console.log('unwrapQuotation :>> ', JSON.stringify(unwrapQuotation, null, 2));
 
-  const unwrapLogic = api.protocols.utility.newWrappedNativeTokenLogic(unwrapQuotation);
+  const unwrapLogic = api.falconsdk.utility.newWrappedNativeTokenLogic(unwrapQuotation);
   console.log('unwrapLogic :>> ', JSON.stringify(unwrapLogic, null, 2));
 })();

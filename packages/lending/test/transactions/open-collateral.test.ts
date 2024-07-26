@@ -6,7 +6,7 @@ import * as common from '@falcon/common';
 import { expect } from 'chai';
 import hre from 'hardhat';
 import * as logics from '@falcon/logics';
-import * as morphoblue from 'src/protocols/morphoblue/tokens';
+import * as morphoblue from 'src/falconsdk/morphoblue/tokens';
 import * as utils from 'test/utils';
 
 describe('Transaction: Open By Collateral', function () {

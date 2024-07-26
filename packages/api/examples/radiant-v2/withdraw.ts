@@ -51,13 +51,13 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 42161;
 
-  const tokenList = await api.protocols.radiantv2.getWithdrawTokenList(chainId);
+  const tokenList = await api.falconsdk.radiantv2.getWithdrawTokenList(chainId);
   const rToken = tokenList[0][0];
   const underlyingToken = tokenList[0][1];
   console.log('rToken :>> ', JSON.stringify(rToken, null, 2));
   console.log('underlyingToken :>> ', JSON.stringify(underlyingToken, null, 2));
 
-  const withdrawQuotation = await api.protocols.radiantv2.getWithdrawQuotation(chainId, {
+  const withdrawQuotation = await api.falconsdk.radiantv2.getWithdrawQuotation(chainId, {
     input: {
       token: rToken,
       amount: '10',
@@ -66,6 +66,6 @@ import * as api from '@falcon/api';
   });
   console.log('withdrawQuotation :>> ', JSON.stringify(withdrawQuotation, null, 2));
 
-  const withdrawLogic = await api.protocols.radiantv2.newWithdrawLogic(withdrawQuotation);
+  const withdrawLogic = await api.falconsdk.radiantv2.newWithdrawLogic(withdrawQuotation);
   console.log('withdrawLogic :>> ', JSON.stringify(withdrawLogic, null, 2));
 })();

@@ -51,13 +51,13 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.spark.getSupplyTokenList(chainId);
+  const tokenList = await api.falconsdk.spark.getSupplyTokenList(chainId);
   const underlyingToken = tokenList[0][0];
   const aToken = tokenList[0][1];
   console.log('underlyingToken :>> ', JSON.stringify(underlyingToken, null, 2));
   console.log('aToken :>> ', JSON.stringify(aToken, null, 2));
 
-  const supplyQuotation = await api.protocols.spark.getSupplyQuotation(chainId, {
+  const supplyQuotation = await api.falconsdk.spark.getSupplyQuotation(chainId, {
     input: {
       token: underlyingToken,
       amount: '10',
@@ -66,6 +66,6 @@ import * as api from '@falcon/api';
   });
   console.log('supplyQuotation :>> ', JSON.stringify(supplyQuotation, null, 2));
 
-  const supplyLogic = await api.protocols.spark.newSupplyLogic(supplyQuotation);
+  const supplyLogic = await api.falconsdk.spark.newSupplyLogic(supplyQuotation);
   console.log('supplyLogic :>> ', JSON.stringify(supplyLogic, null, 2));
 })();

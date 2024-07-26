@@ -67,7 +67,7 @@ import * as common from '@falcon/common';
 //   console.log('data :>> ', JSON.stringify(data));
 //   const output = new common.TokenAmount(toToken).setWei(data.toTokenAmount);
 
-//   const customDataLogic = await api.protocols.utility.newCustomDataLogic({
+//   const customDataLogic = await api.falconsdk.utility.newCustomDataLogic({
 //     inputs: [input],
 //     outputs: [output],
 //     to: data.tx.to,

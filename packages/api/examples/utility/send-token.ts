@@ -22,11 +22,11 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.utility.getSendTokenTokenList(chainId);
+  const tokenList = await api.falconsdk.utility.getSendTokenTokenList(chainId);
   const tokenIn = tokenList[0];
   console.log('tokenIn :>> ', JSON.stringify(tokenIn, null, 2));
 
-  const sendTokenLogic = await api.protocols.utility.newSendTokenLogic({
+  const sendTokenLogic = await api.falconsdk.utility.newSendTokenLogic({
     input: {
       token: tokenIn,
       amount: '10',

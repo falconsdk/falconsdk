@@ -1,5 +1,5 @@
 import { Adapter } from 'src/adapter';
-import { aavev2, aavev3, compoundv3, morphoblue, radiantv2, spark } from 'src/protocols';
+import { aavev2, aavev3, compoundv3, morphoblue, radiantv2, spark } from 'src/falconsdk';
 import * as common from '@falcon/common';
 import { paraswapv5 } from 'src/swappers';
 

@@ -24,11 +24,11 @@ import * as logics from '@falcon/logics';
   const chainId = 1;
   const marketId = logics.compoundv3.MarketId.USDC;
 
-  const tokenList = await api.protocols.compoundv3.getBorrowTokenList(chainId);
+  const tokenList = await api.falconsdk.compoundv3.getBorrowTokenList(chainId);
   const baseToken = tokenList[marketId][0];
   console.log('baseToken :>> ', JSON.stringify(baseToken, null, 2));
 
-  const borrowLogic = await api.protocols.compoundv3.newBorrowLogic({
+  const borrowLogic = await api.falconsdk.compoundv3.newBorrowLogic({
     marketId,
     output: {
       token: baseToken,

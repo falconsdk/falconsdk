@@ -38,17 +38,17 @@ import * as logics from '@falcon/logics';
   const marketId = logics.compoundv3.MarketId.USDC;
   const account = '0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa';
 
-  const tokenList = await api.protocols.compoundv3.getRepayTokenList(chainId);
+  const tokenList = await api.falconsdk.compoundv3.getRepayTokenList(chainId);
   const baseToken = tokenList[marketId][0];
   console.log('baseToken :>> ', JSON.stringify(baseToken, null, 2));
 
-  const repayQuotation = await api.protocols.compoundv3.getRepayQuotation(chainId, {
+  const repayQuotation = await api.falconsdk.compoundv3.getRepayQuotation(chainId, {
     marketId,
     tokenIn: baseToken,
     borrower: account,
   });
   console.log('repayQuotation :>> ', JSON.stringify(repayQuotation, null, 2));
 
-  const repayLogic = await api.protocols.compoundv3.newRepayLogic(repayQuotation);
+  const repayLogic = await api.falconsdk.compoundv3.newRepayLogic(repayQuotation);
   console.log('repayLogic :>> ', JSON.stringify(repayLogic, null, 2));
 })();

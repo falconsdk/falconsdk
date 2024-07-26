@@ -37,17 +37,17 @@ import * as logics from '@falcon/logics';
   const chainId = 42161;
   const account = '0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa';
 
-  const tokenList = await api.protocols.radiantv2.getRepayTokenList(chainId);
+  const tokenList = await api.falconsdk.radiantv2.getRepayTokenList(chainId);
   const underlyingToken = tokenList[0];
   console.log('underlyingToken :>> ', JSON.stringify(underlyingToken, null, 2));
 
-  const repayQuotation = await api.protocols.radiantv2.getRepayQuotation(chainId, {
+  const repayQuotation = await api.falconsdk.radiantv2.getRepayQuotation(chainId, {
     borrower: account,
     tokenIn: underlyingToken,
     interestRateMode: logics.radiantv2.InterestRateMode.variable,
   });
   console.log('repayQuotation :>> ', JSON.stringify(repayQuotation, null, 2));
 
-  const repayLogic = await api.protocols.radiantv2.newRepayLogic(repayQuotation);
+  const repayLogic = await api.falconsdk.radiantv2.newRepayLogic(repayQuotation);
   console.log('repayLogic :>> ', JSON.stringify(repayLogic, null, 2));
 })();

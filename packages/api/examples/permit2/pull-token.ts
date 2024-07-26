@@ -21,11 +21,11 @@ import * as api from '@falcon/api';
 (async () => {
   const chainId = 1;
 
-  const tokenList = await api.protocols.permit2.getPullTokenTokenList(chainId);
+  const tokenList = await api.falconsdk.permit2.getPullTokenTokenList(chainId);
   const tokenIn = tokenList[0];
   console.log('tokenIn :>> ', JSON.stringify(tokenIn, null, 2));
 
-  const pullTokenLogic = await api.protocols.permit2.newPullTokenLogic({
+  const pullTokenLogic = await api.falconsdk.permit2.newPullTokenLogic({
     input: {
       token: tokenIn,
       amount: '10',
