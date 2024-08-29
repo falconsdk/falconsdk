@@ -1,9 +1,5 @@
 # falcon SDK
 
-[![Lint](https://github.com/dinngo/protocolink-js-sdk/actions/workflows/lint.yml/badge.svg)](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/lint.yml)
-[![Unit Test](https://github.com/dinngo/protocolink-js-sdk//actions/workflows/unit-test.yml/badge.svg)](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/unit-test.yml)
-[![E2E Test](https://github.com/dinngo/protocolink-js-sdk//actions/workflows/e2e-test.yml/badge.svg)](https://github.com/falconsdk/falcon-js-sdk/actions/workflows/e2e-test.yml)
-
 - Help developers build DeFi applications with the falcon API without handling API requests and responses.
 - Support a wide range of common use cases, including token swaps, flash loans, and supply/borrow actions.
 - Support multiple blockchain networks.
