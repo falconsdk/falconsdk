@@ -1,0 +1,37 @@
+{
+  "name": "@falcon/lending",
+  "version": "2.0.0",
+  "description": "falcon Lending SDK",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/falconsdk/falcon-js-sdk.git",
+    "directory": "packages/lending"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "format": "yarn sort-package-json",
+    "lint": "eslint --fix src",
+    "prepublishOnly": "yarn build",
+    "test": "mocha",
+    "test:e2e": "hardhat test",
+    "test:unit": "mocha --recursive src"
+  },
+  "dependencies": {
+    "@aave/math-utils": "^1.21.0",
+    "@falcon/api": "^1.1.1",
+    "@falcon/common": "^0.3.11",
+    "@falcon/core": "^0.4.13",
+    "@falcon/logics": "^1.3.0",
+    "bignumber.js": "^9.1.1",
+    "decimal.js-light": "^2.5.1"
+  },
+  "devDependencies": {
+    "@falcon/test-helpers": "*"
+  }
+}
